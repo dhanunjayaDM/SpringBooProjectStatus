@@ -1,0 +1,145 @@
+
+CREATE TABLE `users` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_name` varchar(50) DEFAULT NULL,
+  `password` varchar(150) DEFAULT NULL,
+  `permissions` varchar(50) DEFAULT NULL,
+  `roles` varchar(50) DEFAULT NULL,
+  `created_by` varchar(50) DEFAULT NULL,
+  `created_date` datetime DEFAULT NULL,
+  `modified_by` varchar(50) DEFAULT NULL,
+  `modified_date` datetime DEFAULT NULL,
+  `is_active` bit(1) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=latin1;
+
+
+
+CREATE TABLE `project` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `project_name` varchar(50) DEFAULT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  `created_by` varchar(50) DEFAULT NULL,
+  `created_date` datetime DEFAULT NULL,
+  `modified_by` varchar(50) DEFAULT NULL,
+  `modified_date` datetime DEFAULT NULL,
+  `is_active` bit(1) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=latin1;
+
+CREATE TABLE `module` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+   `project_id` int(11) DEFAULT NULL,
+  `module_name` varchar(50) DEFAULT NULL,
+  `created_by` varchar(50) DEFAULT NULL,
+  `created_date` datetime DEFAULT NULL,
+  `modified_by` varchar(50) DEFAULT NULL,
+  `modified_date` datetime DEFAULT NULL,
+  `is_active` bit(1) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `project_module_id` (`project_id`),
+  CONSTRAINT `project_module_id` FOREIGN KEY (`project_id`) REFERENCES `project` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=latin1;
+
+
+CREATE TABLE `task_type` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `task_type` varchar(50) DEFAULT NULL,
+  `created_by` varchar(50) DEFAULT NULL,
+  `created_date` datetime DEFAULT NULL,
+  `modified_by` varchar(50) DEFAULT NULL,
+  `modified_date` datetime DEFAULT NULL,
+  `is_active` bit(1) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=latin1;
+
+
+
+
+
+CREATE TABLE `screen` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `project_id` int(11) DEFAULT NULL,
+  `module_id` int(11) DEFAULT NULL,
+  `screen_name` varchar(50) DEFAULT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  `created_by` varchar(50) DEFAULT NULL,
+  `created_date` datetime DEFAULT NULL,
+  `modified_by` varchar(50) DEFAULT NULL,
+  `modified_date` datetime DEFAULT NULL,
+  `is_active` bit(1) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `screen_module_id` (`module_id`),
+  KEY `screen_project_id` (`project_id`),
+  CONSTRAINT `screen_project_id` FOREIGN KEY (`project_id`) REFERENCES `project` (`id`),
+  CONSTRAINT `screen_module_id` FOREIGN KEY (`module_id`) REFERENCES `module` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=latin1;
+
+
+
+
+CREATE TABLE `uploadfiles` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `file_name` varchar(255) DEFAULT NULL,
+  `file_download_url` varchar(255) DEFAULT NULL,
+  `original_file_name` varchar(50) DEFAULT NULL,
+   `screen_id` int(11) DEFAULT NULL,
+  `created_by` varchar(50) DEFAULT NULL,
+  `created_date` datetime DEFAULT NULL,
+  `modified_by` varchar(255) DEFAULT NULL,
+  `modified_date` datetime DEFAULT NULL,
+  `is_active` bit(1) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `uploadfiles_screen_id` (`screen_id`),
+  CONSTRAINT `uploadfiles_screen_id` FOREIGN KEY (`screen_id`) REFERENCES `screen` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=latin1;
+
+
+
+CREATE TABLE `tracking_tasks` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+   `screen_id` int(11) DEFAULT NULL,
+  `tasktype_id` int(11) DEFAULT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `module_id` int(11) DEFAULT NULL,
+  `project_id` int(11) DEFAULT NULL,
+  `summary` varchar(255) DEFAULT NULL,
+  `task_desc` varchar(255) DEFAULT NULL,
+  `task_name` varchar(255) DEFAULT NULL,
+   `date_of_release` datetime DEFAULT NULL,
+  `created_by` varchar(255) DEFAULT NULL,
+  `created_date` datetime DEFAULT NULL,
+  `modified_by` varchar(255) DEFAULT NULL,
+  `modified_date` datetime DEFAULT NULL,
+  `is_active` bit(1) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `tracking_tasks_screen_id` (`screen_id`),
+  KEY `tracking_tasks_task_id` (`tasktype_id`),
+  KEY `tracking_tasks_user_id` (`user_id`),
+  KEY `tracking_tasks_module_id` (`module_id`),
+  KEY `tracking_tasks_project_id` (`project_id`),
+  CONSTRAINT `tracking_tasks_screen_id` FOREIGN KEY (`screen_id`) REFERENCES `screen` (`id`),
+  CONSTRAINT `tracking_tasks_task_id` FOREIGN KEY (`tasktype_id`) REFERENCES `task_type` (`id`),
+  CONSTRAINT `tracking_tasks_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
+  CONSTRAINT `tracking_tasks_module_id` FOREIGN KEY (`module_id`) REFERENCES `module` (`id`),
+  CONSTRAINT `tracking_tasks_project_id` FOREIGN KEY (`project_id`) REFERENCES `project` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=latin1;
+
+
+
+CREATE TABLE `trackingtask_uploadfiles` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `file_name` varchar(255) DEFAULT NULL,
+  `file_download_url` varchar(255) DEFAULT NULL,
+  `original_file_name` varchar(255) DEFAULT NULL,
+  `trackingtask_id` int(11) DEFAULT NULL,
+  `created_by` varchar(255) DEFAULT NULL,
+  `created_date` datetime DEFAULT NULL,
+  `modified_by` varchar(255) DEFAULT NULL,
+  `modified_date` datetime DEFAULT NULL,
+  `is_active` bit(1) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `trackingtask_uploadfiles_trackingtask_id` (`trackingtask_id`),
+  CONSTRAINT `trackingtask_uploadfiles_trackingtask_id` FOREIGN KEY (`trackingtask_id`) REFERENCES `tracking_tasks` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=latin1;
+

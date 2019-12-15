@@ -1,0 +1,81 @@
+package com.lara;
+
+
+
+
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.SecureRandom;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.UUID;
+
+
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+
+public class Passwordencode 
+{
+	public static void main(String[] args) throws NoSuchAlgorithmException, NoSuchProviderException, ParseException 
+	{
+		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+		String hashedPassword = passwordEncoder.encode("admin@1234");
+		System.out.println(hashedPassword);
+		
+		Boolean abc=passwordEncoder.matches("admin@1234","$2a$10$UsrKy1QVZMvBVMixt28TReoo255YE/r475vOsd4o2Ka5CGHbrApqS ");
+		System.out.println(abc);
+		
+		String date="1568950794000";
+		
+		Long ln=Long.parseLong(date);
+		Date date1 =new Date(ln);
+		System.out.println(date1);
+		SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd-MM-yyyy");
+	    String date2 = DATE_FORMAT.format(date1);
+	    System.out.println(date2);
+		
+		String filename= UUID.randomUUID().toString();
+		System.out.println(filename);
+		
+		byte[] md5CheckSumSalt =getMD5CheckSumSalt();
+		System.out.println(md5CheckSumSalt);
+		
+		String md5HashFileName = createMD5CheckSum("Address",md5CheckSumSalt);
+		System.out.println(md5HashFileName);
+
+	}
+	
+	
+	
+	public static byte[] getMD5CheckSumSalt() throws NoSuchAlgorithmException, NoSuchProviderException {
+		   SecureRandom sr = SecureRandom.getInstance("SHA1PRNG", "SUN");
+		   byte[] salt = new byte[16];
+		   sr.nextBytes(salt);
+		   return salt;
+	}
+	
+	
+
+	public static String createMD5CheckSum(String fileName, byte[] salt) throws NoSuchAlgorithmException
+	{
+	    String md5HashFileName = null;
+	    try {
+	        MessageDigest md = MessageDigest.getInstance("MD5");
+	        md.update(salt);
+	        byte[] bytes = md.digest(fileName.getBytes());
+	        StringBuilder sb = new StringBuilder();
+	        for(int i=0; i< bytes.length ;i++) {
+	        sb.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
+	        }
+	        md5HashFileName = sb.toString();
+	    }
+	    catch (NoSuchAlgorithmException e) {
+	    e.printStackTrace();
+	    }
+	    return md5HashFileName;
+	}
+
+}

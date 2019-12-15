@@ -1,0 +1,14 @@
+db.driver: com.mysql.jdbc.Driver
+db.url: jdbc:mysql://localhost:3306/mysql
+db.username: root
+db.password: root
+
+# Hibernate
+hibernate.dialect: org.hibernate.dialect.MySQL5Dialect
+hibernate.show_sql: true
+hibernate.hbm2ddl.auto: create
+
+entitymanager.packagesToScan: com.lara
+server.port=8089
+#spring.security.user.name=admin
+#spring.security.user.password=admin@1234
